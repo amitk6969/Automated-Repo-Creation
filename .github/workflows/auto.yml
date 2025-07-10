@@ -11,7 +11,7 @@ jobs:
     - name: Create a new repository via GitHub API
       run: |
         curl -X POST https://api.github.com/user/repos \
-        -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+        -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
         -H "Accept: application/vnd.github+json" \
         -d '{
           "name": "auto-created-repo",
