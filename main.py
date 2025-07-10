@@ -16,7 +16,7 @@ if not GITHUB_USERNAME or not TOKEN:
     exit(1)
 
 # ----------------- Repo Configuration -----------------
-REPO_NAME = "Automated-Repo-Creation"  
+REPO_NAME = "my-new-repo"  
 DESCRIPTION = "This repository was created using an automated Python script."
 PRIVATE = True  # True = private repo, False = public
 AUTO_INIT = True
