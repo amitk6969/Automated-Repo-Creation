@@ -7,11 +7,11 @@ from dotenv import load_dotenv
 load_dotenv()  # Loads variables from a .env file
 
 # Get GitHub credentials from environment
-GITHUB_USERNAME = os.getenv("USERNAME")
+USERNAME = os.getenv("USERNAME")
 TOKEN = os.getenv("TOKEN")
 
 # Sanity check
-if not GITHUB_USERNAME or not TOKEN:
+if not USERNAME or not TOKEN:
     print("❌ Missing GITHUB_USERNAME or GITHUB_TOKEN in .env file.")
     exit(1)
 
