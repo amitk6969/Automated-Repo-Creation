@@ -12,7 +12,7 @@ TOKEN = os.getenv("TOKEN")
 
 # Sanity check
 if not USERNAME or not TOKEN:
-    print("❌ Missing GITHUB_USERNAME or GITHUB_TOKEN in .env file.")
+    print("❌ Missing USERNAME or TOKEN in .env file.")
     exit(1)
 
 # ----------------- Repo Configuration -----------------
