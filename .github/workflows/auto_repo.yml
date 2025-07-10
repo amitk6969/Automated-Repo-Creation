@@ -1,7 +1,7 @@
 name: Create GitHub Repo via Script
 
 on:
-  workflow_dispatch:  # Allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
   run-script:
@@ -23,6 +23,7 @@ jobs:
 
       - name: 🚀 Run the repo creation script
         env:
-          GITHUB_TOKEN_CUSTOM: ${{ secrets.GITHUB_TOKEN_CUSTOM }}
+          GITHUB_USERNAME: ${{ secrets.USERNAME }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
           python main.py
