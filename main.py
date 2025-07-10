@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()  # Loads variables from a .env file
 
 # Get GitHub credentials from environment
-GITHUB_USERNAME = os.getenv("GITHUB_USERNAME")
-TOKEN = os.getenv("GITHUB_TOKEN")
+GITHUB_USERNAME = os.getenv("USERNAME")
+TOKEN = os.getenv("TOKEN")
 
 # Sanity check
 if not GITHUB_USERNAME or not TOKEN:
