@@ -3,22 +3,40 @@ import json
 import os
 from dotenv import load_dotenv
 
-# ----------------- Load Environment Variables -----------------
-load_dotenv()  # Loads variables from a .env file
+load_dotenv()
 
-# Get GitHub credentials from environment
+# # ----------------- Get User Input -----------------
+# REPO_NAME = input("Enter Repository Name: ").strip()
+# DESCRIPTION = input("Enter Repository Description: ").strip()
+
+# # Ask for Private/Public input and convert to Boolean
+# while True:
+#     private_input = input("Do you want the repository to be private? (yes/no): ").strip().lower()
+#     if private_input in ['yes', 'y']:
+#         PRIVATE = True
+#         break
+#     elif private_input in ['no', 'n']:
+#         PRIVATE = False
+#         break
+#     else:
+#         print("Please enter 'yes' or 'no'.")
+
+# ----------------- Get Repo Details from Environment -----------------
+REPO_NAME = os.getenv("REPO_NAME")
+DESCRIPTION = os.getenv("DESCRIPTION")
+PRIVATE_STR = os.getenv("PRIVATE", "true").lower()
+PRIVATE = PRIVATE_STR == "true"
+
+# ----------------- Get GitHub Credentials from Environment -----------------
 USERNAME = os.getenv("USERNAME")
 TOKEN = os.getenv("TOKEN")
 
 # Sanity check
 if not USERNAME or not TOKEN:
-    print("❌ Missing USERNAME or TOKEN in .env file.")
+    print("❌ Missing GITHUB_USERNAME or GITHUB_TOKEN in environment.")
     exit(1)
 
 # ----------------- Repo Configuration -----------------
-REPO_NAME = "my-new-repo"  
-DESCRIPTION = "This repository was created using an automated Python script."
-PRIVATE = True  # True = private repo, False = public
 AUTO_INIT = True
 GITIGNORE_TEMPLATE = "Python"
 
