@@ -34,8 +34,8 @@ jobs:
 
       - name: 🚀 Run the repo creation script
         env:
-          GITHUB_USERNAME: ${{ secrets.USERNAME }}
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          USERNAME: ${{ secrets.USERNAME }}
+          TOKEN: ${{ secrets.TOKEN }}
           REPO_NAME: ${{ github.event.inputs.repo_name }}
           DESCRIPTION: ${{ github.event.inputs.description }}
           PRIVATE: ${{ github.event.inputs.private }}
