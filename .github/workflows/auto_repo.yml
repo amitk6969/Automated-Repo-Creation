@@ -33,6 +33,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: 🚀 Run the repo creation script
+        shell: bash
         env:
           TOKEN: ${{ secrets.GH_TOKEN }}
           REPO_NAME: ${{ github.event.inputs.repo_name }}
@@ -42,8 +43,5 @@ jobs:
           echo "Repo name: $REPO_NAME"
           echo "Description: $DESCRIPTION"
           echo "Private: $PRIVATE"
-          echo "Token length: $(expr length "$TOKEN")"
+          echo "Token length: ${#TOKEN}"
           python main.py
-
-
-  
