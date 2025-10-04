@@ -34,7 +34,7 @@ jobs:
 
       - name: 🚀 Run the repo creation script
         env:
-          TOKEN: ${{ secrets.TOKEN }}
+          TOKEN: ${{ secrets.GH_TOKEN }}
           REPO_NAME: ${{ github.event.inputs.repo_name }}
           DESCRIPTION: ${{ github.event.inputs.description }}
           PRIVATE: ${{ github.event.inputs.private }}
