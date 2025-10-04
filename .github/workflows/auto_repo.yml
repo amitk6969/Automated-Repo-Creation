@@ -39,4 +39,11 @@ jobs:
           DESCRIPTION: ${{ github.event.inputs.description }}
           PRIVATE: ${{ github.event.inputs.private }}
         run: |
+          echo "Repo name: $REPO_NAME"
+          echo "Description: $DESCRIPTION"
+          echo "Private: $PRIVATE"
+          echo "Token length: $(expr length "$TOKEN")"
           python main.py
+
+
+  
