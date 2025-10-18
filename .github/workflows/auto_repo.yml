@@ -18,7 +18,7 @@ jobs:
   request-approval:
     runs-on: ubuntu-latest
     environment:
-      name: repo-creation-approval
+      name: repo-creation-approvall
       # You’ll set who can approve in GitHub → Settings → Environments → repo-creation-approval
     steps:
       - name: ⏳ Waiting for approval
