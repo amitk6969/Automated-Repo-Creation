@@ -46,18 +46,7 @@ jobs:
     if: needs.approval_check.outputs.approved == 'true'
 
     steps:
-      - name: Install GitHub CLI
-        run: |
-          sudo apt update
-          sudo apt install -y gh
-
-      - name: Authenticate GitHub CLI
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          echo "${GH_TOKEN}" | gh auth login --with-token
-
-      - name: Create Repository
+      - name: Create Repository via API
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
@@ -65,13 +54,16 @@ jobs:
           VISIBILITY="${{ needs.approval_check.outputs.visibility }}"
 
           if [[ "$VISIBILITY" == "public" ]]; then
-            vis_flag="--public"
+            PRIVATE_FLAG=false
           else
-            vis_flag="--private"
+            PRIVATE_FLAG=true
           fi
 
-          # Create repo under YOUR account: amitk6969
-          gh repo create "amitk6969/$REPO" $vis_flag --confirm
+          curl -X POST \
+            -H "Authorization: token ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/user/repos \
+            -d "{\"name\":\"$REPO\", \"private\":$PRIVATE_FLAG}"
 
       - name: Apply rulesets if public
         if: needs.approval_check.outputs.visibility == 'public'
