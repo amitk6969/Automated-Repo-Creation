@@ -1,0 +1,68 @@
+name: Auto Repository Creation Workflow
+
+on:
+  issue_comment:
+    types: [created]
+
+env:
+  APPROVER_USERNAME: "amit0006"     # change if someone else is approver
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+jobs:
+
+  approval_check:
+    name: Check Approver Comment
+    runs-on: ubuntu-latest
+
+    outputs:
+      approved: ${{ steps.check.outputs.approved }}
+      repo_name: ${{ steps.check.outputs.repo_name }}
+      visibility: ${{ steps.check.outputs.visibility }}
+
+    steps:
+
+      - name: Check if approver commented "approve"
+        id: check
+        run: |
+          COMMENT_AUTHOR="${{ github.event.comment.user.login }}"
+          COMMENT_BODY="${{ github.event.comment.body }}"
+
+          REPO_NAME=$(echo "${{ github.event.issue.body }}" | grep "repo_name" | awk '{print $2}')
+          VISIBILITY=$(echo "${{ github.event.issue.body }}" | grep "visibility" | awk '{print $2}')
+
+          if [[ "$COMMENT_AUTHOR" == "${APPROVER_USERNAME}" && "$COMMENT_BODY" == "approve" ]]; then
+            echo "approved=true" >> $GITHUB_OUTPUT
+          else
+            echo "approved=false" >> $GITHUB_OUTPUT
+          fi
+
+          echo "repo_name=$REPO_NAME" >> $GITHUB_OUTPUT
+          echo "visibility=$VISIBILITY" >> $GITHUB_OUTPUT
+
+
+  create_repo:
+    name: Create Repository
+    needs: approval_check
+    runs-on: ubuntu-latest
+    if: needs.approval_check.outputs.approved == 'true'
+
+    steps:
+
+      - name: Create Repository
+        run: |
+          REPO="${{ needs.approval_check.outputs.repo_name }}"
+          VISIBILITY="${{ needs.approval_check.outputs.visibility }}"
+
+          if [[ "$VISIBILITY" == "public" ]]; then
+            vis_flag="--public"
+          else
+            vis_flag="--private"
+          fi
+
+          # This creates repo under your account: amit0006
+          gh repo create "amit0006/$REPO" $vis_flag --confirm
+
+      - name: Apply rulesets if public
+        if: needs.approval_check.outputs.visibility == 'public'
+        run: |
+          echo "Public repo detected. Ruleset will be applied here once config is ready."
