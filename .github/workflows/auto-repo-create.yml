@@ -5,7 +5,7 @@ on:
     types: [created]
 
 env:
-  APPROVER_USERNAME: "amitk6969"     # change if someone else is approver
+  APPROVER_USERNAME: "amitk6969"
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
@@ -20,7 +20,6 @@ jobs:
       visibility: ${{ steps.check.outputs.visibility }}
 
     steps:
-
       - name: Check if approver commented "approve"
         id: check
         run: |
@@ -47,8 +46,20 @@ jobs:
     if: needs.approval_check.outputs.approved == 'true'
 
     steps:
+      - name: Install GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt install -y gh
+
+      - name: Authenticate GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          echo "${GH_TOKEN}" | gh auth login --with-token
 
       - name: Create Repository
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           REPO="${{ needs.approval_check.outputs.repo_name }}"
           VISIBILITY="${{ needs.approval_check.outputs.visibility }}"
@@ -59,8 +70,8 @@ jobs:
             vis_flag="--private"
           fi
 
-          # This creates repo under your account: amit0006
-          gh repo create "amit0006/$REPO" $vis_flag --confirm
+          # Create repo under YOUR account: amitk6969
+          gh repo create "amitk6969/$REPO" $vis_flag --confirm
 
       - name: Apply rulesets if public
         if: needs.approval_check.outputs.visibility == 'public'
