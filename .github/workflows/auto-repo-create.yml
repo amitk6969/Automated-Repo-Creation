@@ -65,7 +65,16 @@ jobs:
             https://api.github.com/user/repos \
             -d "{\"name\":\"$REPO\", \"private\":$PRIVATE_FLAG}"
 
-      - name: Apply rulesets if public
+      - name: Apply ruleset if public
         if: needs.approval_check.outputs.visibility == 'public'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          echo "Public repo detected. Ruleset will be applied here once config is ready."
+          REPO="${{ needs.approval_check.outputs.repo_name }}"
+          echo "Applying ruleset to $REPO"
+
+          curl -X POST \
+            -H "Authorization: token ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/amitk6969/$REPO/rulesets \
+            -d @ruleset.json
