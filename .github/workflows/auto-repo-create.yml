@@ -5,7 +5,7 @@ on:
     types: [created]
 
 env:
-  APPROVER_USERNAME: "amit0006"     # change if someone else is approver
+  APPROVER_USERNAME: "amitk6969"     # change if someone else is approver
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
