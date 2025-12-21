@@ -15,20 +15,10 @@
       }
     },
     {
-      "type": "non_fast_forward",
-      "parameters": {
-        "block_force_pushes": true
-      }
+      "type": "deletion"
     },
     {
-      "type": "deletion",
-      "parameters": {
-        "block_deletions": true
-      }
-    },
-    {
-      "type": "linear_history",
-      "parameters": {}
+      "type": "non_fast_forward"
     }
   ]
 }
