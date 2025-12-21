@@ -6,10 +6,8 @@ on:
 
 env:
   APPROVER_USERNAME: "amitk6969"
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
-
   approval_check:
     name: Check Approver Comment
     runs-on: ubuntu-latest
@@ -26,18 +24,17 @@ jobs:
           COMMENT_AUTHOR="${{ github.event.comment.user.login }}"
           COMMENT_BODY="${{ github.event.comment.body }}"
 
-          REPO_NAME=$(echo "${{ github.event.issue.body }}" | grep "repo_name" | awk '{print $2}')
-          VISIBILITY=$(echo "${{ github.event.issue.body }}" | grep "visibility" | awk '{print $2}')
+          REPO_NAME=$(echo "${{ github.event.issue.body }}" | grep "^repo_name " | awk '{print $2}')
+          VISIBILITY=$(echo "${{ github.event.issue.body }}" | grep "^visibility " | awk '{print $2}')
+
+          echo "repo_name=$REPO_NAME" >> $GITHUB_OUTPUT
+          echo "visibility=$VISIBILITY" >> $GITHUB_OUTPUT
 
           if [[ "$COMMENT_AUTHOR" == "${APPROVER_USERNAME}" && "$COMMENT_BODY" == "approve" ]]; then
             echo "approved=true" >> $GITHUB_OUTPUT
           else
             echo "approved=false" >> $GITHUB_OUTPUT
           fi
-
-          echo "repo_name=$REPO_NAME" >> $GITHUB_OUTPUT
-          echo "visibility=$VISIBILITY" >> $GITHUB_OUTPUT
-
 
   create_repo:
     name: Create Repository
@@ -56,13 +53,22 @@ jobs:
           REPO="${{ needs.approval_check.outputs.repo_name }}"
           VISIBILITY="${{ needs.approval_check.outputs.visibility }}"
 
+          echo "DEBUG: repo_name='$REPO'"
+          echo "DEBUG: visibility='$VISIBILITY'"
+
+          if [[ -z "$REPO" ]]; then
+            echo "ERROR: repo_name is empty"
+            exit 1
+          fi
+
           if [[ "$VISIBILITY" == "public" ]]; then
             PRIVATE_FLAG=false
           else
             PRIVATE_FLAG=true
           fi
 
-          curl -X POST \
+          curl -s -w "\nHTTP_STATUS:%{http_code}\n" \
+            -X POST \
             -H "Authorization: token ${GH_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/user/repos \
@@ -74,7 +80,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           REPO="${{ needs.approval_check.outputs.repo_name }}"
-          echo "Applying ruleset to $REPO"
 
           RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" \
             -X POST \
