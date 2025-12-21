@@ -76,8 +76,12 @@ jobs:
           REPO="${{ needs.approval_check.outputs.repo_name }}"
           echo "Applying ruleset to $REPO"
 
-          curl -X POST \
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\n" \
+            -X POST \
             -H "Authorization: token ${GH_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/amitk6969/$REPO/rulesets \
-            -d @ruleset.json
+            -d @ruleset.json)
+
+          echo "===== CURL RESPONSE ====="
+          echo "$RESPONSE"
