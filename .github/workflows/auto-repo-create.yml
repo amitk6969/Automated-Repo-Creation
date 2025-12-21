@@ -67,7 +67,7 @@ jobs:
             PRIVATE_FLAG=true
           fi
 
-          curl -s -w "\nHTTP_STATUS:%{http_code}\n" \
+          curl -v -w "\nHTTP_STATUS:%{http_code}\n" \
             -X POST \
             -H "Authorization: token ${GH_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
